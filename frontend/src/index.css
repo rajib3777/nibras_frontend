@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-nibras-green: #115E39;
+  --color-nibras-green-dark: #0A3A23;
+  --color-nibras-green-light: #1A8B54;
+  
+  --color-nibras-gold: #C89B3C;
+  --color-nibras-gold-hover: #D4AF60;
+  
+  --color-nibras-bg: #FDFBF7;
+  --color-nibras-surface: #F2F0E6;
+  
+  --font-sans: 'Outfit', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+body {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--color-nibras-bg);
+  color: #2D3748;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, h5, h6, .font-serif {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-nibras-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-nibras-green);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-nibras-gold);
+}
+
+.glass-nav {
+  background: rgba(253, 251, 247, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(17, 94, 57, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+}
+
+.btn-primary {
+  @apply bg-[#115E39] text-white px-6 py-2.5 rounded-md font-semibold transition-all duration-300 hover:bg-[#0A3A23] hover:shadow-lg hover:-translate-y-0.5;
+}
+
+.btn-gold {
+  @apply bg-[#C89B3C] text-white px-8 py-2.5 rounded-md font-semibold transition-all duration-300 hover:bg-[#D4AF60] hover:shadow-lg hover:-translate-y-0.5;
+}
+
+.section-padding {
+  @apply py-16 md:py-24;
+}
+
+.container-custom {
+  @apply max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #C89B3C 0%, #E5C167 50%, #A38634 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

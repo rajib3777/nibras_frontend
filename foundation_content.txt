@@ -1,0 +1,57 @@
+১) Home 
+ Hero section: ফাউেнশন পিরিচিত, টҝাগলাইন, CTA (Apply Now, Donate, Contact)। 
+ Highlighted Programs/Projects, Latest News & Events (ডায়নািমক কাডκ)। 
+ Featured Teachers & Directors (έϕাফাইল έথেক অেটা έফচ করা কাডκ)। 
+ Quick stats (বছর, িশϠাথλ সংখҝা, কাযκο ম ইতҝািদ) ও έটিѶেমািনয়াল/গҝালাির ѽাইডার। 
+২) About Nibras Foundation 
+ Mission, Vision, Values, History – ডায়নািমক ѓক এিডেটবল (CMS style)। 
+ έবাডκ অফ িডেরЄরস ও মҝােনজেমл Μটম – ϕেতҝেকর έছাট έϕাফাইল ও “View full profile” িলВ। 
+৩) Academics & Programs 
+ έকাসκ/έϕাςাম িলѶ (General Education, Madrasa/Islamic Programs, Skills Training ইতҝািদ – তΦিম যা 
+রাখেব)। 
+ ϕিতΜট έϕাςােমর িডেটইলস έপজ: উেгশҝ, কািরক ু লাম, সময়, িফ/দােনর কাঠােমা, responsible 
+িশϠক/িডেরЄর έϕাফাইল িলВ। 
+৪) Teachers & Staff Profiles 
+ Teachers Directory: নাম, সাবেজЄ, ছিব, িফѝ ার (Subject, Class, Gender, Experience)। 
+ Individual Teacher Profile: Bio, qualification, subject list, class routine snippet, downloadable 
+resources, contact form (teacher-এর ইেমইেল যােব)। 
+ Directors/Management Profiles: আলাদা টҝাব – designation িভিЫক িফѝ ার, έমেসজ ϖম িডেরЄর 
+ইতҝািদ। 
+৫) Students & Guardians Portal (overview page) 
+ Public side: িকভােব লগইন করেবন, সুিবধাვেলা (attendance, result, notice, payments ইতҝািদ)। 
+ লগইন বাটন έথেক আলাদা সাবেডােমইন/჈েট যােব (portal.nibras… বা /portal)। 
+৬) News, Events & Notice Board 
+ News & Stories: ѓগ Ѷাইল – কҝাটাগির (Achievement, Outreach, Announcements)। 
+ Events Calendar view (ইেভл িডেটইলস έপজ), έরΝজেϾ শন/RSVP অপশন। 
+ Urgent Notice (έহামেপেজ িপন করার অপশন)। 
+৭) Admission & Donation 
+ Online Admission Form (multi-step, file upload,)। 
+ Donation page: এককালীন/মািসক দান, , donor info collection  
+ ৮) Contact & Location (৭টার বাইের হেলও লাগেবই) 
+ Contact form, έফান/ইেমইল, ვগল মҝাপ এমেবড, έসাশҝাল িলংক। 
+ Frequently Asked Questions (FAQ) έসকশন। 
+
+৩. মািѝ -ইউজার লগইন ও έরাল 
+έরালვেলা উদাহরণ িহেসেব: 
+ Super Admin / Admin 
+ সবিকছΦর ফ ু ল এেЊস, έরাল & permission মҝােনজেমл। 
+ Site settings (logo, color, SEO), έমনু মҝােনজার, ѽাইডার/έহাম έসকশন কনিফগােরশন। 
+ Director / Management 
+ News/Events অনুেমাদন, িশϠক έϕাফাইল অҝাቂ ভ, একােডিমক έসΜটংস (class, section, subject)। 
+ Teacher 
+ িনেজর έϕাফাইল এিডট (photo, short bio, education, social link)। 
+ Accounts/Staff (optional) 
+Role based access-এর জনҝ Laravel-এর Gates/Policies বা Spatie Permission Package ইউজ করেল ሾত হেব। 
+৪. বҝাকএн মিডউল (CMS Management) 
+ CMS Module: Page Builder (About, Policy ইতҝািদ), Menu Manager, Slider & Banner, Gallery (album wise), 
+Blog/News। 
+ User & Role Module: User CRUD, role assign, permission matrix। 
+ Communication Module: Notice, SMS/Email integration, internal messaging (teacher-guardian)। 
+ Donation & Finance Module: Donation entry, online payment integration, donor list, income-expense report। 
+৫. UI/UX ও িফচার আইিডয়া 
+ আধুিনক, clean design, Islamic/educational έটান – কাѶম কালার পҝােলট (গাঢ় সবুজ + সাদা/έসানািল)। 
+ Fully responsive, mobile-first; Teacher/Student portal আলাদা dashboard layout। 
+ Multi-language ready (কমপেϠ বাংলা + আরিব+ইংেরΝজ); content έটিবেল language field বা JSON translation। 
+ Security: Email verification, strong password, optional 2FA for admin/director। 
+ 
+
