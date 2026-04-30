@@ -3,9 +3,25 @@ import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import nibrasLogo from '../../assets/nibras_logo.png';
 import { useSettings } from '../../hooks/useSettings';
+import { useSocialMedia } from '../../hooks/useSocialMedia';
+import { Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 const Footer = () => {
   const { data: settings } = useSettings();
+  const { data: socialData } = useSocialMedia();
+
+  const socialLinks = socialData?.results || socialData || [];
+  
+  const getIcon = (platform) => {
+    switch (platform.toLowerCase()) {
+      case 'facebook': return <Facebook size={18} />;
+      case 'twitter': return <Twitter size={18} />;
+      case 'instagram': return <Instagram size={18} />;
+      case 'linkedin': return <Linkedin size={18} />;
+      case 'youtube': return <Youtube size={18} />;
+      default: return null;
+    }
+  };
   
   const siteName = settings?.site_name || 'Nibras Foundation';
   const tagline = settings?.about_short || 'Dedicated to lighting hearts with knowledge. We provide quality education, memorization of the Quran, and social welfare programs to build a better future for our community.';
@@ -34,6 +50,19 @@ const Footer = () => {
             <p className="text-white/80 leading-relaxed text-sm">
               {tagline}
             </p>
+            <div className="flex gap-4 pt-4">
+              {socialLinks.map((link) => (
+                <a 
+                  key={link.id} 
+                  href={link.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#C89B3C] transition-all"
+                >
+                  {getIcon(link.platform)}
+                </a>
+              ))}
+            </div>
           </motion.div>
 
           {/* Column 2: Explore Links */}

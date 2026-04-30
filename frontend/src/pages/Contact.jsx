@@ -1,9 +1,67 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Globe, Video, Share2, Send, Plus, Minus } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, Plus, Minus, Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
+import { useSettings } from '../hooks/useSettings';
+import { useSocialMedia } from '../hooks/useSocialMedia';
+import apiClient from '../api/client';
 
 const Contact = () => {
   const [activeFaq, setActiveFaq] = useState(0);
+  const { data: settings } = useSettings();
+  const { data: socialData } = useSocialMedia();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+
+  const address = settings?.address || 'House 12, Road 5, Block D, Bashundhara R/A, Dhaka';
+  const phone = settings?.phone || '+880 1234 567890';
+  const email = settings?.email || 'info@nibras.org';
+  const socialLinks = socialData?.results || socialData || [];
+
+  const getIcon = (platform) => {
+    switch (platform.toLowerCase()) {
+      case 'facebook': return <Facebook size={20} />;
+      case 'twitter': return <Twitter size={20} />;
+      case 'instagram': return <Instagram size={20} />;
+      case 'linkedin': return <Linkedin size={20} />;
+      case 'youtube': return <Youtube size={20} />;
+      default: return null;
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, placeholder, value } = e.target;
+    // Map placeholder to field name if needed, but let's just use proper names
+    const fieldMap = {
+        'Full Name': 'name',
+        'Email Address': 'email',
+        'Subject': 'subject',
+        'Your Message': 'message'
+    };
+    const field = fieldMap[placeholder] || name;
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+    try {
+      await apiClient.post('/core/contact-messages/', formData);
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const faqs = [
     { 
@@ -35,7 +93,7 @@ const Contact = () => {
                  We'd Love to <br /> <span className="text-accent italic">Connect</span>
                </h1>
                <p className="text-gray-500 font-bold mb-12 max-w-md text-lg">
-                 Have questions or want to learn more about Nibras Foundation? Our team is here to help.
+                 Have questions or want to learn more about {settings?.site_name || 'Nibras Foundation'}? Our team is here to help.
                </p>
 
                <div className="space-y-8">
@@ -45,7 +103,7 @@ const Contact = () => {
                      </div>
                      <div>
                         <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Our Location</h4>
-                        <p className="text-[#0f3d2e] font-black text-lg">House 12, Road 5, Block D, <br />Bashundhara R/A, Dhaka</p>
+                        <p className="text-[#0f3d2e] font-black text-lg">{address}</p>
                      </div>
                   </div>
                   <div className="flex items-start gap-6 group">
@@ -54,7 +112,7 @@ const Contact = () => {
                      </div>
                      <div>
                         <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Phone Number</h4>
-                        <p className="text-[#0f3d2e] font-black text-lg">+880 1234 567890 <br />+880 0987 654321</p>
+                        <p className="text-[#0f3d2e] font-black text-lg">{phone}</p>
                      </div>
                   </div>
                   <div className="flex items-start gap-6 group">
@@ -63,16 +121,22 @@ const Contact = () => {
                      </div>
                      <div>
                         <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Email Address</h4>
-                        <p className="text-[#0f3d2e] font-black text-lg">info@nibras.org <br />admin@nibras.org</p>
+                        <p className="text-[#0f3d2e] font-black text-lg">{email}</p>
                      </div>
                   </div>
                </div>
 
                <div className="mt-12 flex gap-4">
-                  {[Globe, Video, Share2].map((Icon, i) => (
-                    <button key={i} className="w-12 h-12 bg-[#0f3d2e] text-white rounded-xl flex items-center justify-center hover:bg-accent transition-all hover:scale-110 shadow-lg shadow-[#0f3d2e]/20">
-                       <Icon size={20} />
-                    </button>
+                  {socialLinks.map((link) => (
+                    <a 
+                      key={link.id} 
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#0f3d2e] text-white rounded-xl flex items-center justify-center hover:bg-accent transition-all hover:scale-110 shadow-lg shadow-[#0f3d2e]/20"
+                    >
+                       {getIcon(link.platform)}
+                    </a>
                   ))}
                </div>
             </div>
@@ -81,17 +145,60 @@ const Contact = () => {
             <div className="flex-1">
                <div className="bg-white p-10 md:p-14 rounded-[50px] shadow-2xl border border-gray-100">
                   <h3 className="text-3xl font-black text-[#0f3d2e] uppercase tracking-tight mb-8">Send Message</h3>
-                  <div className="space-y-6">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                      <div className="flex flex-col md:flex-row gap-6">
-                        <input type="text" placeholder="Full Name" className="flex-1 bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-gray-700 focus:ring-2 focus:ring-accent outline-none" />
-                        <input type="email" placeholder="Email Address" className="flex-1 bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-gray-700 focus:ring-2 focus:ring-accent outline-none" />
+                        <input 
+                          type="text" 
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          placeholder="Full Name" 
+                          required
+                          className="flex-1 bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-gray-700 focus:ring-2 focus:ring-accent outline-none" 
+                        />
+                        <input 
+                          type="email" 
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          placeholder="Email Address" 
+                          required
+                          className="flex-1 bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-gray-700 focus:ring-2 focus:ring-accent outline-none" 
+                        />
                      </div>
-                     <input type="text" placeholder="Subject" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-gray-700 focus:ring-2 focus:ring-accent outline-none" />
-                     <textarea placeholder="Your Message" rows="5" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-gray-700 focus:ring-2 focus:ring-accent outline-none"></textarea>
-                     <button className="w-full bg-[#0f3d2e] text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-[#0f3d2e]/20 hover:bg-black transition-all">
-                        Send Message <Send size={18} />
+                     <input 
+                        type="text" 
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleInputChange}
+                        placeholder="Subject" 
+                        required
+                        className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-gray-700 focus:ring-2 focus:ring-accent outline-none" 
+                     />
+                     <textarea 
+                        name="message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        placeholder="Your Message" 
+                        required
+                        rows="5" 
+                        className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-gray-700 focus:ring-2 focus:ring-accent outline-none"
+                     ></textarea>
+                     
+                     {submitStatus === 'success' && (
+                        <p className="text-green-600 font-bold text-sm">Message sent successfully!</p>
+                     )}
+                     {submitStatus === 'error' && (
+                        <p className="text-red-600 font-bold text-sm">Failed to send message. Please try again.</p>
+                     )}
+
+                     <button 
+                        disabled={isSubmitting}
+                        className="w-full bg-[#0f3d2e] text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-[#0f3d2e]/20 hover:bg-black transition-all disabled:opacity-50"
+                     >
+                        {isSubmitting ? 'Sending...' : 'Send Message'} <Send size={18} />
                      </button>
-                  </div>
+                  </form>
                </div>
             </div>
          </div>

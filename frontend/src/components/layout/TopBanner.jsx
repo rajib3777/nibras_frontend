@@ -3,10 +3,26 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import nibrasLogo from '../../assets/nibras_logo.png';
 import { useSettings } from '../../hooks/useSettings';
+import { useSocialMedia } from '../../hooks/useSocialMedia';
+import { Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 const TopBanner = () => {
   const { i18n } = useTranslation();
   const { data: settings } = useSettings();
+  const { data: socialData } = useSocialMedia();
+
+  const socialLinks = socialData?.results || socialData || [];
+  
+  const getIcon = (platform) => {
+    switch (platform.toLowerCase()) {
+      case 'facebook': return <Facebook size={14} />;
+      case 'twitter': return <Twitter size={14} />;
+      case 'instagram': return <Instagram size={14} />;
+      case 'linkedin': return <Linkedin size={14} />;
+      case 'youtube': return <Youtube size={14} />;
+      default: return null;
+    }
+  };
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -19,8 +35,20 @@ const TopBanner = () => {
   return (
     <div className="bg-[#FDFBF7] py-4 border-b border-gray-100">
       <div className="container-custom flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Empty space for flex alignment */}
-        <div className="hidden md:block w-32"></div>
+        {/* Social Media Links */}
+        <div className="hidden md:flex items-center gap-3 w-32">
+          {socialLinks.slice(0, 3).map((link) => (
+            <a 
+              key={link.id} 
+              href={link.url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-[#115E39]/60 hover:text-[#115E39] transition-colors"
+            >
+              {getIcon(link.platform)}
+            </a>
+          ))}
+        </div>
 
         {/* Logo Section */}
         <Link to="/" className="flex flex-col items-center justify-center flex-1 group">
