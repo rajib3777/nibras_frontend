@@ -1,0 +1,24 @@
+# Backend — local only, not tracked in this repo
+backend/
+
+# Docker
+docker-compose.yml
+docker-compose.*.yml
+.dockerignore
+
+# Temp/Extra files
+extract_pdf.py
+foundation_content.txt
+*.pyc
+__pycache__/
+
+# Node
+frontend/node_modules/
+frontend/.env.local
+frontend/dist/
+frontend/.vite/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
