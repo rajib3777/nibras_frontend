@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import studentsImg from '../../assets/hero-girl-exact.png';
+import studentsImg from '../../assets/hero.png';
 import { useSettings } from '../../hooks/useSettings';
 
 const AboutMission = () => {
