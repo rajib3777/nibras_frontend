@@ -6,12 +6,11 @@ export const useSocialMedia = () => {
     queryKey: ['social-media'],
     queryFn: async () => {
       const settings = await getSiteSettings();
-      return {
-        facebook: settings.facebook,
-        instagram: settings.instagram,
-        youtube: settings.youtube,
-        whatsapp: settings.whatsapp,
-      };
+      return [
+        { id: 1, platform: 'facebook', url: settings.facebook },
+        { id: 2, platform: 'instagram', url: settings.instagram },
+        { id: 3, platform: 'youtube', url: settings.youtube },
+      ].filter(link => link.url);
     },
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
