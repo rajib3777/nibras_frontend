@@ -10,7 +10,7 @@ const FloatingCallButton = () => {
       animate={{ scale: 1 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-6 right-6 z-50 bg-[#C89B3C] text-white p-4 rounded-full shadow-lg shadow-[#C89B3C]/40 flex items-center justify-center"
+      className="fixed bottom-8 left-8 z-50 bg-[#C89B3C] text-white p-4 rounded-full shadow-lg shadow-[#C89B3C]/40 flex items-center justify-center"
       style={{
         boxShadow: "0 0 0 0 rgba(200, 155, 60, 1)",
         animation: "pulse-amber 2s infinite"
