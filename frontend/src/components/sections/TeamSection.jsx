@@ -15,7 +15,35 @@ const TeamSection = () => {
     }
   });
 
-  const team = teamData?.results || teamData || [];
+  const fallbackTeam = [
+    {
+      id: 't1',
+      user: { first_name: 'Sheikh Abdullah', last_name: 'Al Mahmud' },
+      designation: 'Head of Arabic Department',
+      bio: 'PhD in Islamic Theology from Al-Azhar University. Over 15 years of teaching experience.',
+      profile_picture: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400',
+      expertise: 'Tafseer, Arabic Grammar'
+    },
+    {
+      id: 't2',
+      user: { first_name: 'Dr. Habibur', last_name: 'Rahman' },
+      designation: 'Principal',
+      bio: 'Leading the foundation with a vision of blending modern education with Islamic values.',
+      profile_picture: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&q=80&w=400',
+      expertise: 'Islamic Jurisprudence, Education Management'
+    },
+    {
+      id: 't3',
+      user: { first_name: 'Hafez Qari', last_name: 'Ibrahim' },
+      designation: 'Chief Hifz Instructor',
+      bio: 'Renowned Qari with multiple national awards in Quran recitation.',
+      profile_picture: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400',
+      expertise: 'Tajweed, Qira\'at'
+    }
+  ];
+
+  let team = teamData?.results || teamData || [];
+  if (team.length === 0) team = fallbackTeam;
 
   return (
     <section className="py-16 bg-white relative">

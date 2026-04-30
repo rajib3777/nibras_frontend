@@ -20,9 +20,45 @@ const NewsEvents = () => {
     }
   });
 
-  const newsList = newsData?.results || newsData || [];
-  const eventsList = eventsData?.results || eventsData || [];
-  
+  const fallbackNews = [
+    {
+      id: 'n1',
+      title: 'Annual Quran Competition 2024',
+      summary: 'Students from all branches participated in the annual Hifz competition.',
+      created_at: new Date().toISOString(),
+      image: 'https://images.unsplash.com/photo-1585036156171-384164a8c675?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'n2',
+      title: 'New Campus Inauguration',
+      summary: 'We are thrilled to announce the opening of our new campus.',
+      created_at: new Date().toISOString(),
+      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=400'
+    }
+  ];
+
+  const fallbackEvents = [
+    {
+      id: 'e1',
+      title: 'Parent-Teacher Meeting',
+      date: new Date(Date.now() + 86400000 * 5).toISOString(),
+      time: '10:00 AM',
+      location: 'Main Auditorium'
+    },
+    {
+      id: 'e2',
+      title: 'Islamic Book Fair',
+      date: new Date(Date.now() + 86400000 * 15).toISOString(),
+      time: '09:00 AM',
+      location: 'Campus Ground'
+    }
+  ];
+
+  let newsList = newsData?.results || newsData || [];
+  if (newsList.length === 0) newsList = fallbackNews;
+
+  let eventsList = eventsData?.results || eventsData || [];
+  if (eventsList.length === 0) eventsList = fallbackEvents;
   const featuredNews1 = newsList.length > 0 ? newsList[0] : null;
   const featuredNews2 = newsList.length > 1 ? newsList[1] : null;
   const featuredEvent = eventsList.length > 0 ? eventsList[0] : null;

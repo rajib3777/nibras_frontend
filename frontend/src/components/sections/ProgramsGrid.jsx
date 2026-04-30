@@ -12,7 +12,29 @@ const ProgramsGrid = () => {
     }
   });
 
-  const programs = data?.results || data || [];
+  const fallbackPrograms = [
+    {
+      id: 'f1',
+      name: 'Tahfizul Quran',
+      description: 'Comprehensive Quran memorization program with proper Tajweed.',
+      image: 'https://images.unsplash.com/photo-1585036156171-384164a8c675?auto=format&fit=crop&q=80&w=800'
+    },
+    {
+      id: 'f2',
+      name: 'Islamic Studies',
+      description: 'In-depth study of Hadith, Fiqh, and Islamic History.',
+      image: 'https://images.unsplash.com/photo-1606059728286-4e5554f67d2f?auto=format&fit=crop&q=80&w=800'
+    },
+    {
+      id: 'f3',
+      name: 'General Education',
+      description: 'Modern curriculum including Science, Math, and Languages.',
+      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=800'
+    }
+  ];
+
+  let programs = data?.results || data || [];
+  if (programs.length === 0) programs = fallbackPrograms;
 
   return (
     <section className="py-16 md:py-24 bg-[#FDFBF7]">
