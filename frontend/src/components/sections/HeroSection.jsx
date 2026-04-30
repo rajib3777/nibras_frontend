@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import apiClient, { API_BASE_URL } from '../../api/client';
 import { useTranslation } from 'react-i18next';
+import defaultHeroImage from '../../assets/hero.png';
 
 const HeroSection = () => {
   const { i18n } = useTranslation();
@@ -37,10 +38,10 @@ const HeroSection = () => {
     title: "Nibras Foundation",
     subtitle: "Lighting hearts with knowledge",
     button_text: "Our Programs",
-    image: "https://images.unsplash.com/photo-1606059728286-4e5554f67d2f?auto=format&fit=crop&q=80&w=2000"
+    image: defaultHeroImage
   };
 
-  const heroImage = activeSlider.image.startsWith('http') 
+  const heroImage = activeSlider.image.startsWith('http') || activeSlider.image.startsWith('data:') || activeSlider.image.startsWith('/')
     ? activeSlider.image 
     : `${API_BASE_URL}${activeSlider.image}`;
 
