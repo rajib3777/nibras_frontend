@@ -7,6 +7,7 @@ import TeamSection from '../components/sections/TeamSection';
 import NewsEvents from '../components/sections/NewsEvents';
 import DonationWidget from '../components/sections/DonationWidget';
 import FAQSection from '../components/sections/FAQSection';
+import TestimonialsSection from '../components/sections/TestimonialsSection';
 
 const Home = () => {
   return (
@@ -15,6 +16,7 @@ const Home = () => {
       <FeaturesCards />
       <AboutMission />
       <ProgramsGrid />
+      <TestimonialsSection />
       <TeamSection />
       <FAQSection />
       <NewsEvents />
