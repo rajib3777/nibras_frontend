@@ -1,12 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../api/client';
+import { getSiteSettings } from '../api/core';
 
 export const useSocialMedia = () => {
   return useQuery({
     queryKey: ['social-media'],
     queryFn: async () => {
-      const response = await apiClient.get('/core/social-media/');
-      return response.data;
+      const settings = await getSiteSettings();
+      return {
+        facebook: settings.facebook,
+        instagram: settings.instagram,
+        youtube: settings.youtube,
+        whatsapp: settings.whatsapp,
+      };
     },
+    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 };
