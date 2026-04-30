@@ -2,39 +2,23 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
-const teachers = [
-  {
-    name: 'Scholar L.S. Philips',
-    role: 'Quranic Sciences',
-    img: 'https://images.unsplash.com/photo-1566492031523-0c4022a1881b?auto=format&fit=crop&q=80&w=300&h=300',
-    bio: 'An expert in Quranic sciences with over 15 years of teaching experience. Passionate about Tajweed and Tafseer.',
-    education: 'Al-Azhar University'
-  },
-  {
-    name: 'Dr. A.H. Al-Fatih',
-    role: 'Islamic History',
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300&h=300',
-    bio: 'Specializes in early Islamic history and the Seerah of the Prophet (PBUH). Author of several acclaimed historical journals.',
-    education: 'Medina Islamic University'
-  },
-  {
-    name: 'Sr. Maryam Ali',
-    role: 'Tajweed Specialist',
-    img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300&h=300',
-    bio: 'Dedicated Tajweed instructor focusing on female and children\'s education. Certified with multiple Ijazahs.',
-    education: 'Darul Uloom'
-  },
-  {
-    name: 'Ustad Tariq Rahman',
-    role: 'Arabic Language',
-    img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300&h=300',
-    bio: 'Makes learning Arabic accessible and fun. Uses modern pedagogical techniques to teach classical Arabic.',
-    education: 'Qatar University'
-  }
-];
+import { useQuery } from '@tanstack/react-query';
+import apiClient, { API_BASE_URL } from '../api/client';
 
 const Teachers = () => {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
+
+  const { data: teachersData, isLoading } = useQuery({
+    queryKey: ['teachers-page'],
+    queryFn: async () => {
+      const response = await apiClient.get('/users/teachers/');
+      return response.data;
+    }
+  });
+
+  const teachersList = teachersData?.results || teachersData || [];
+
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   return (
     <div className="bg-[#FDFBF7] min-h-screen relative">
@@ -50,9 +34,9 @@ const Teachers = () => {
 
         {/* Teachers Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
-          {teachers.map((t, i) => (
+          {teachersList.map((t, i) => (
             <motion.div 
-              key={i}
+              key={t.id || i}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
@@ -60,12 +44,12 @@ const Teachers = () => {
             >
               <div className="w-full aspect-square bg-gray-300 mb-4 overflow-hidden rounded-sm">
                 <img 
-                  src={t.img} 
-                  alt={t.name} 
+                  src={t.profile_picture_url || (t.profile_picture?.startsWith('http') ? t.profile_picture : `${API_BASE_URL}${t.profile_picture}`) || "https://images.unsplash.com/photo-1566492031523-0c4022a1881b?auto=format&fit=crop&q=80&w=300&h=300"} 
+                  alt={t.full_name} 
                   className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
                 />
               </div>
-              <h3 className="font-sans text-[16px] font-bold text-gray-900 mb-1">{t.name}</h3>
+              <h3 className="font-sans text-[16px] font-bold text-gray-900 mb-1">{t.full_name}</h3>
               <p className="text-[#C89B3C] text-[12px] font-semibold mb-6">{t.role}</p>
               
               <div className="flex justify-between gap-2">
@@ -137,21 +121,21 @@ const Teachers = () => {
               </button>
               
               <div className="w-full md:w-2/5 h-64 md:h-auto">
-                <img src={selectedTeacher.img} alt={selectedTeacher.name} className="w-full h-full object-cover" />
+                <img src={selectedTeacher.profile_picture_url || (selectedTeacher.profile_picture?.startsWith('http') ? selectedTeacher.profile_picture : `${API_BASE_URL}${selectedTeacher.profile_picture}`) || "https://images.unsplash.com/photo-1566492031523-0c4022a1881b?auto=format&fit=crop&q=80&w=400&h=400"} alt={selectedTeacher.full_name} className="w-full h-full object-cover" />
               </div>
               
               <div className="p-8 md:w-3/5 flex flex-col justify-center">
-                <h3 className="font-sans text-2xl font-bold text-[#115E39] mb-1">{selectedTeacher.name}</h3>
+                <h3 className="font-sans text-2xl font-bold text-[#115E39] mb-1">{selectedTeacher.full_name}</h3>
                 <p className="text-[#C89B3C] font-semibold mb-6">{selectedTeacher.role}</p>
                 
                 <div className="space-y-4">
                   <div>
                     <h4 className="text-[13px] font-bold text-gray-400 uppercase tracking-wider mb-1">Education</h4>
-                    <p className="text-gray-800 font-medium">{selectedTeacher.education}</p>
+                    <p className="text-gray-800 font-medium">{selectedTeacher.teacher_profile?.qualification || "No qualifications listed."}</p>
                   </div>
                   <div>
                     <h4 className="text-[13px] font-bold text-gray-400 uppercase tracking-wider mb-1">Biography</h4>
-                    <p className="text-gray-600 text-[14px] leading-relaxed">{selectedTeacher.bio}</p>
+                    <p className="text-gray-600 text-[14px] leading-relaxed">{selectedTeacher.bio || "Dedicated educator with a deep passion for Islamic sciences."}</p>
                   </div>
                 </div>
                 

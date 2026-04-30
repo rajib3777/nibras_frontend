@@ -1,8 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import studentsImg from '../../assets/hero-girl-exact.png';
+import { useSettings } from '../../hooks/useSettings';
 
 const AboutMission = () => {
+  const { data: settings } = useSettings();
+  
+  const siteName = settings?.site_name || 'Nibras Foundation';
+  const aboutText = settings?.about_short || 'Dedicated to lighting hearts with knowledge. We provide quality education, memorization of the Quran, and social welfare programs to build a better future for our community.';
   return (
     <section className="section-padding bg-gradient-to-b from-[#FDFBF7] to-[#F2F0E6]">
       <div className="container-custom">
@@ -13,7 +18,7 @@ const AboutMission = () => {
           className="text-center mb-16"
         >
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#115E39]">
-            About Nibras Foundation
+            About {siteName}
           </h2>
           <div className="w-24 h-1 bg-[#C89B3C] mx-auto mt-6 rounded-full" />
         </motion.div>
@@ -33,10 +38,7 @@ const AboutMission = () => {
                 Our Mission & Vision
               </h3>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
-                <strong className="text-[#115E39]">Our Mission:</strong> To provide quality Islamic education and social support to uplift our community, ensuring every individual has access to foundational knowledge.
-              </p>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                <strong className="text-[#C89B3C]">Our Vision:</strong> A future where knowledge and compassion light the way for a better society. We strive to nurture a generation of enlightened individuals.
+                {aboutText}
               </p>
             </div>
             

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../../api/client';
+import apiClient, { API_BASE_URL } from '../../api/client';
 
 const ProgramsGrid = () => {
   const { data, isLoading } = useQuery({
@@ -41,7 +41,7 @@ const ProgramsGrid = () => {
             >
               <div className="h-48 overflow-hidden">
                 <img 
-                  src={prog.image} 
+                  src={prog.image?.startsWith('http') ? prog.image : `${API_BASE_URL}${prog.image}`} 
                   alt={prog.name} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />

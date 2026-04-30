@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, BookOpen, Star } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../../api/client';
+import apiClient, { API_BASE_URL } from '../../api/client';
 
 const TeamSection = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
@@ -10,29 +10,12 @@ const TeamSection = () => {
   const { data: teamData, isLoading } = useQuery({
     queryKey: ['teachers'],
     queryFn: async () => {
-      // The users endpoint might be /users/
-      const response = await apiClient.get('/users/');
+      const response = await apiClient.get('/users/teachers/');
       return response.data;
     }
   });
 
-  // If no dynamic data, fallback to some static for display purposes since teachers might not be seeded
-  const team = teamData?.results?.length > 0 ? teamData.results : [
-    {
-      name: 'Dr. Ameen Khilid',
-      role: 'Director',
-      img: 'https://images.unsplash.com/photo-1566492031523-0c4022a1881b?auto=format&fit=crop&q=80&w=400&h=400',
-      qualifications: ['Ph.D. in Islamic Jurisprudence', 'Over 20 years of leadership'],
-      subjects: ['Advanced Fiqh', 'Islamic Leadership']
-    },
-    {
-      name: 'Sr. Layla Hasan',
-      role: 'Quran Instructor',
-      img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400&h=400',
-      qualifications: ['Ijazah in Hafs \'an \'Asim', 'Certified in Tajweed rules'],
-      subjects: ['Tajweed', 'Memorization (Hifz)']
-    }
-  ];
+  const team = teamData?.results || teamData || [];
 
   return (
     <section className="py-16 bg-white relative">
@@ -59,13 +42,13 @@ const TeamSection = () => {
             >
               <div className="w-full h-40 mb-4 overflow-hidden rounded-md bg-gray-200">
                 <img 
-                  src={member.img} 
-                  alt={member.name} 
+                  src={member.profile_picture_url || (member.profile_picture?.startsWith('http') ? member.profile_picture : `${API_BASE_URL}${member.profile_picture}`) || "https://images.unsplash.com/photo-1566492031523-0c4022a1881b?auto=format&fit=crop&q=80&w=400&h=400"} 
+                  alt={member.full_name} 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
               <h3 className="font-sans text-[16px] font-bold text-gray-900 mb-1">
-                {member.name}
+                {member.full_name}
               </h3>
               <p className="text-gray-400 text-[12px] mb-4">
                 {member.role}
@@ -114,7 +97,7 @@ const TeamSection = () => {
                     className="w-24 h-24 object-cover rounded-sm border border-gray-200"
                   />
                   <div className="flex flex-col justify-center">
-                    <h3 className="font-sans text-xl font-bold text-gray-900 mb-1">{selectedProfile.name}</h3>
+                    <h3 className="font-sans text-xl font-bold text-gray-900 mb-1">{selectedProfile.full_name}</h3>
                     <p className="text-[#C89B3C] text-sm font-semibold flex items-center gap-1">
                       <Star size={14} className="fill-current" /> {selectedProfile.role}
                     </p>
@@ -123,33 +106,24 @@ const TeamSection = () => {
 
                 {/* Description (Lorem ipsum equivalent from Figma) */}
                 <p className="text-gray-500 text-[13px] mb-6 leading-relaxed">
-                  Dedicated educator with a deep passion for Islamic sciences. Committed to fostering an environment of spiritual and academic excellence for all students.
+                  {selectedProfile.bio || "Dedicated educator with a deep passion for Islamic sciences. Committed to fostering an environment of spiritual and academic excellence for all students."}
                 </p>
 
                 {/* Qualifications */}
                 <div className="mb-6">
                   <h4 className="font-sans text-[15px] font-bold text-gray-900 mb-3">Qualifications</h4>
-                  <ul className="space-y-2">
-                    {selectedProfile.qualifications.map((q, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-[13px] text-gray-600">
-                        <CheckCircle size={16} className="text-[#115E39] mt-0.5 shrink-0" />
-                        {q}
-                      </li>
-                    ))}
-                  </ul>
+                  <p className="text-[13px] text-gray-600 leading-relaxed">
+                    {selectedProfile.teacher_profile?.qualification || "No qualifications listed."}
+                  </p>
                 </div>
 
                 {/* Subjects I Teach */}
                 <div className="mb-8">
-                  <h4 className="font-sans text-[15px] font-bold text-gray-900 mb-3">Subjects I Teach</h4>
-                  <ul className="space-y-2">
-                    {selectedProfile.subjects.map((sub, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-[13px] text-gray-600 bg-white border border-gray-100 p-2 rounded-sm shadow-sm">
-                        <BookOpen size={16} className="text-[#C89B3C]" />
-                        {sub}
-                      </li>
-                    ))}
-                  </ul>
+                  <h4 className="font-sans text-[15px] font-bold text-gray-900 mb-3">Subject</h4>
+                  <div className="flex items-center gap-2 text-[13px] text-gray-600 bg-white border border-gray-100 p-2 rounded-sm shadow-sm">
+                    <BookOpen size={16} className="text-[#C89B3C]" />
+                    {selectedProfile.teacher_profile?.subject || "General"}
+                  </div>
                 </div>
 
                 {/* Action Buttons */}

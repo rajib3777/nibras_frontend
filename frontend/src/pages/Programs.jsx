@@ -1,8 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import ProgramsGrid from '../components/sections/ProgramsGrid';
+import { useQuery } from '@tanstack/react-query';
+import apiClient, { API_BASE_URL } from '../api/client';
 
 const Programs = () => {
+  const [selectedId, setSelectedId] = useState(null);
+
+  const { data: programsData, isLoading } = useQuery({
+    queryKey: ['programs'],
+    queryFn: async () => {
+      const response = await apiClient.get('/programs/programs/');
+      return response.data;
+    }
+  });
+
+  const programs = programsData?.results || programsData || [];
+  
+  // Set initial selected ID if not set
+  if (!selectedId && programs.length > 0) {
+    setSelectedId(programs[0].id);
+  }
+
+  const activeProgram = programs.find(p => p.id === selectedId) || programs[0];
+
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+
   return (
     <div className="bg-[#FDFBF7] min-h-screen">
       
@@ -18,91 +41,80 @@ const Programs = () => {
           
           {/* Left Main Content */}
           <div className="w-full lg:w-2/3">
-            <h2 className="font-sans text-2xl font-bold text-[#C89B3C] mb-6">
-              Islamic Studies Program
-            </h2>
-            <div className="w-full h-64 md:h-[400px] bg-gray-200 rounded-md overflow-hidden mb-8 shadow-sm">
-              <img 
-                src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=1200" 
-                alt="Islamic Studies" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            
-            <h3 className="font-sans text-[20px] font-bold text-gray-900 mb-4">
-              About the Program
-            </h3>
-            <div className="space-y-3 mb-10 text-[14px] text-gray-600">
-              <p className="flex items-start gap-2">
-                <span className="text-[#115E39] font-bold">›</span> Foundation in core Islamic beliefs and principles.
-              </p>
-              <p className="flex items-start gap-2">
-                <span className="text-[#115E39] font-bold">›</span> Deep dive into authentic Hadith literature.
-              </p>
-              <p className="flex items-start gap-2">
-                <span className="text-[#115E39] font-bold">›</span> Essential Islamic jurisprudence (Fiqh).
-              </p>
-            </div>
+            {activeProgram && (
+              <motion.div
+                key={activeProgram.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h2 className="font-sans text-2xl font-bold text-[#C89B3C] mb-6">
+                  {activeProgram.name}
+                </h2>
+                <div className="w-full h-64 md:h-[400px] bg-gray-200 rounded-md overflow-hidden mb-8 shadow-sm">
+                  <img 
+                    src={activeProgram.image?.startsWith('http') ? activeProgram.image : `${API_BASE_URL}${activeProgram.image}`} 
+                    alt={activeProgram.name} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                
+                <h3 className="font-sans text-[20px] font-bold text-gray-900 mb-4">
+                  About the Program
+                </h3>
+                <div className="text-[14px] text-gray-600 leading-relaxed mb-10 whitespace-pre-line">
+                  {activeProgram.description}
+                </div>
 
-            <h3 className="font-sans text-[20px] font-bold text-gray-900 mb-4">
-              Curriculum
-            </h3>
-            <p className="text-[14px] text-gray-600 mb-4 leading-relaxed">
-              Our curriculum blends traditional Islamic sciences with contemporary educational methodologies, ensuring a comprehensive understanding of the faith.
-            </p>
-            <div className="bg-white border border-gray-100 p-6 rounded-md shadow-sm">
-               <ul className="space-y-4">
-                  <li className="flex items-center gap-3">
-                     <div className="w-8 h-8 rounded bg-[#F4EFE6] flex items-center justify-center text-[#115E39]">📚</div>
-                     <div>
-                        <h4 className="text-[14px] font-bold text-gray-800">Introduction to Aqeedah</h4>
-                        <p className="text-[12px] text-gray-500">Understanding the core beliefs of Islam.</p>
-                     </div>
-                  </li>
-                  <li className="flex items-center gap-3">
-                     <div className="w-8 h-8 rounded bg-[#F4EFE6] flex items-center justify-center text-[#115E39]">🕌</div>
-                     <div>
-                        <h4 className="text-[14px] font-bold text-gray-800">Fiqh of Worship</h4>
-                        <p className="text-[12px] text-gray-500">Rules of purity, prayer, fasting, and charity.</p>
-                     </div>
-                  </li>
-               </ul>
-            </div>
+                <div className="bg-white border border-gray-100 p-6 rounded-md shadow-sm">
+                   <div className="flex flex-wrap gap-6">
+                      <div className="flex items-center gap-3">
+                         <div className="w-8 h-8 rounded bg-[#F4EFE6] flex items-center justify-center text-[#115E39]">📅</div>
+                         <div>
+                            <h4 className="text-[12px] font-bold text-gray-800 uppercase tracking-wider">Duration</h4>
+                            <p className="text-[12px] text-gray-500">{activeProgram.duration}</p>
+                         </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                         <div className="w-8 h-8 rounded bg-[#F4EFE6] flex items-center justify-center text-[#115E39]">💰</div>
+                         <div>
+                            <h4 className="text-[12px] font-bold text-gray-800 uppercase tracking-wider">Fee</h4>
+                            <p className="text-[12px] text-gray-500">{activeProgram.fee} BDT</p>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+              </motion.div>
+            )}
           </div>
 
-          {/* Right Sidebar (1:1 with Figma top-right box) */}
+          {/* Right Sidebar */}
           <div className="w-full lg:w-1/3">
             <div className="sticky top-28 bg-[#FDFBF7] border border-gray-200 rounded-md overflow-hidden shadow-sm">
               {/* Sidebar Header */}
               <div className="bg-[#115E39] py-4 text-center">
                 <h3 className="text-white font-sans text-[18px] font-bold tracking-wide">
-                  Our Programs
+                  Available Programs
                 </h3>
               </div>
               
               {/* Sidebar Links */}
               <div className="p-0">
                 <ul className="divide-y divide-gray-100">
-                  <li>
-                    <a href="#" className="block px-6 py-4 bg-[#F4EFE6] text-[#115E39] font-bold text-[14px] border-l-4 border-[#115E39]">
-                      Islamic Studies Program
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="block px-6 py-4 text-gray-600 hover:bg-gray-50 font-medium text-[14px] transition-colors border-l-4 border-transparent hover:border-gray-300">
-                      Children's Education
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="block px-6 py-4 text-gray-600 hover:bg-gray-50 font-medium text-[14px] transition-colors border-l-4 border-transparent hover:border-gray-300">
-                      Hifz Program
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="block px-6 py-4 text-gray-600 hover:bg-gray-50 font-medium text-[14px] transition-colors border-l-4 border-transparent hover:border-gray-300">
-                      Vocational Training
-                    </a>
-                  </li>
+                  {programs.map((prog) => (
+                    <li key={prog.id}>
+                      <button 
+                        onClick={() => setSelectedId(prog.id)}
+                        className={`w-full text-left block px-6 py-4 text-[14px] transition-all border-l-4 ${
+                          selectedId === prog.id 
+                            ? 'bg-[#F4EFE6] text-[#115E39] font-bold border-[#115E39]' 
+                            : 'text-gray-600 hover:bg-gray-50 font-medium border-transparent'
+                        }`}
+                      >
+                        {prog.name}
+                      </button>
+                    </li>
+                  ))}
                 </ul>
               </div>
 

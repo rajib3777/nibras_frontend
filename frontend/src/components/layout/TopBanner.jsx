@@ -2,15 +2,19 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import nibrasLogo from '../../assets/nibras_logo.png';
+import { useSettings } from '../../hooks/useSettings';
 
 const TopBanner = () => {
   const { i18n } = useTranslation();
+  const { data: settings } = useSettings();
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
     document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = lng;
   };
+
+  const siteName = settings?.site_name || 'Nibras Foundation';
 
   return (
     <div className="bg-[#FDFBF7] py-4 border-b border-gray-100">
@@ -26,7 +30,7 @@ const TopBanner = () => {
             className="w-auto h-32 md:h-48 object-contain transition-transform duration-500 group-hover:scale-105"
           />
           <h1 className="font-serif text-3xl md:text-5xl font-extrabold text-[#115E39] uppercase tracking-widest text-center mt-4">
-            Nibras Foundation
+            {siteName}
           </h1>
         </Link>
 

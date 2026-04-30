@@ -2,15 +2,44 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Bell, ArrowRight } from 'lucide-react';
 
-const notices = [
-  { date: '11', month: 'Dec', title: 'বার্ষিক পরিক্ষার ফলাফল আগামি ১১ ডিসেম্বর প্রকাশ করা হবে', type: 'Result' },
-  { date: '23', month: 'Nov', title: 'বার্ষিক পরিক্ষা ২০২৩ , আগামি ২৩ তারিখ থেকে শুরু হবে!', type: 'Exam' },
-  { date: '15', month: 'Nov', title: 'আগামি কাল স্কুল বন্ধ থাকবে!', type: 'Holiday' },
-  { date: '10', month: 'Nov', title: 'স্কুল আগামি সুক্রবার খোলা থাকবে', type: 'Notice' },
-  { date: '05', month: 'Nov', title: 'স্টাফদের বন্ধের নোটিশ', type: 'Staff' },
-];
+import { useQuery } from '@tanstack/react-query';
+import apiClient from '../../api/client';
 
 const NoticeBoard = () => {
+  const { data: noticesData, isLoading } = useQuery({
+    queryKey: ['notices'],
+    queryFn: async () => {
+      const response = await apiClient.get('/news/notices/');
+      return response.data;
+    }
+  });
+
+  const noticesRaw = noticesData?.results || noticesData || [];
+  
+  // Map backend data to frontend format
+  const notices = noticesRaw.map(n => {
+    const d = new Date(n.created_at);
+    return {
+      id: n.id,
+      date: d.getDate().toString().padStart(2, '0'),
+      month: d.toLocaleString('en-US', { month: 'short' }),
+      year: d.getFullYear(),
+      title: n.title,
+      content: n.content,
+      type: n.is_urgent ? 'Urgent' : 'Notice',
+      created_at: n.created_at
+    };
+  });
+
+  const featuredNotice = notices.length > 0 ? notices[0] : {
+    title: 'নতুন শিক্ষাবর্ষের ভর্তি কার্যক্রম শুরু হয়েছে। আজই আবেদন করুন।',
+    content: 'নিবরাস মাদরাসায় ২০২৬ শিক্ষাবর্ষে তাহফিযুল কুরআন এবং সাধারণ বিভাগে ভর্তি চলছে। সীমিত আসন, দ্রুত যোগাযোগ করুন।',
+    date: '01',
+    month: 'Dec',
+    year: '2025'
+  };
+
+  const listNotices = notices.length > 1 ? notices.slice(1, 6) : notices.slice(0, 5);
   return (
     <section className="py-24 bg-white relative">
       <div className="max-w-[1440px] mx-auto px-4 md:px-8">
@@ -64,16 +93,16 @@ const NoticeBoard = () => {
                   Featured
                 </div>
                 <h3 className="text-2xl md:text-3xl font-black text-gray-900 leading-snug mb-6 font-serif">
-                  নতুন শিক্ষাবর্ষের ভর্তি কার্যক্রম শুরু হয়েছে। আজই আবেদন করুন।
+                  {featuredNotice.title}
                 </h3>
                 <p className="text-gray-600 font-medium leading-relaxed">
-                  নিবরাস মাদরাসায় ২০২৬ শিক্ষাবর্ষে তাহফিযুল কুরআন এবং সাধারণ বিভাগে ভর্তি চলছে। সীমিত আসন, দ্রুত যোগাযোগ করুন।
+                  {featuredNotice.content}
                 </p>
               </div>
 
               <div className="mt-12 flex items-center justify-between border-t border-gray-100 pt-6">
                 <div className="flex items-center gap-2 text-gray-500 text-sm font-bold">
-                  <Calendar size={16} /> 01 Dec 2025
+                  <Calendar size={16} /> {featuredNotice.date} {featuredNotice.month} {featuredNotice.year}
                 </div>
                 <div className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-[#0f3d2e] group-hover:text-white group-hover:border-[#0f3d2e] transition-all">
                   <ArrowRight size={16} className="-rotate-45 group-hover:rotate-0 transition-transform" />
@@ -84,9 +113,9 @@ const NoticeBoard = () => {
 
           {/* Notice List */}
           <div className="lg:col-span-7 flex flex-col justify-center">
-            {notices.map((notice, i) => (
+            {listNotices.map((notice, i) => (
               <motion.div 
-                key={i}
+                key={notice.id || i}
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -95,21 +124,21 @@ const NoticeBoard = () => {
               >
                 {/* Date Block */}
                 <div className="flex-shrink-0 w-20 h-20 rounded-2xl bg-gray-50 border border-gray-100 flex flex-col items-center justify-center group-hover:bg-[#0f3d2e] group-hover:border-[#0f3d2e] transition-colors">
-                  <span className="text-2xl font-black text-gray-900 group-hover:text-white font-serif leading-none mb-1">{notice.date}</span>
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest group-hover:text-accent">{notice.month}</span>
+                   <span className="text-2xl font-black text-gray-900 group-hover:text-white font-serif leading-none mb-1">{notice.date}</span>
+                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest group-hover:text-accent">{notice.month}</span>
                 </div>
 
                 {/* Content */}
                 <div className="flex-grow">
-                  <span className="text-[10px] font-bold text-accent uppercase tracking-wider mb-2 block">{notice.type}</span>
-                  <h4 className="text-lg font-bold text-gray-900 leading-snug group-hover:text-[#0f3d2e] transition-colors">
-                    {notice.title}
-                  </h4>
+                   <span className="text-[10px] font-bold text-accent uppercase tracking-wider mb-2 block">{notice.type}</span>
+                   <h4 className="text-lg font-bold text-gray-900 leading-snug group-hover:text-[#0f3d2e] transition-colors">
+                     {notice.title}
+                   </h4>
                 </div>
 
                 {/* Action */}
                 <div className="hidden sm:flex flex-shrink-0 w-10 h-10 rounded-full border border-gray-200 items-center justify-center group-hover:border-accent group-hover:bg-accent text-gray-400 group-hover:text-white transition-all">
-                  <ArrowRight size={16} />
+                   <ArrowRight size={16} />
                 </div>
               </motion.div>
             ))}

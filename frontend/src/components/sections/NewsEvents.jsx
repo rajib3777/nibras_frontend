@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../../api/client';
+import apiClient, { API_BASE_URL } from '../../api/client';
 
 const NewsEvents = () => {
   const { data: newsData, isLoading: isNewsLoading } = useQuery({
@@ -50,7 +50,7 @@ const NewsEvents = () => {
               className="bg-white rounded-md overflow-hidden border border-gray-100 flex flex-col group relative"
             >
               <div className="h-8 w-full bg-[#E5C167] overflow-hidden">
-                  <img src={featuredNews1.image || "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=600&h=100"} className="w-full h-full object-cover opacity-50" alt="" />
+                  <img src={featuredNews1.image ? (featuredNews1.image.startsWith('http') ? featuredNews1.image : `${API_BASE_URL}${featuredNews1.image}`) : "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=600&h=100"} className="w-full h-full object-cover opacity-50" alt="" />
               </div>
               
               <div className="p-6 flex-grow flex flex-col justify-between z-10 bg-white">
@@ -71,7 +71,7 @@ const NewsEvents = () => {
               </div>
 
               <div className="h-10 w-full overflow-hidden mt-auto">
-                  <img src={featuredNews1.image || "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=600&h=100"} className="w-full h-full object-cover" alt="" />
+                  <img src={featuredNews1.image ? (featuredNews1.image.startsWith('http') ? featuredNews1.image : `${API_BASE_URL}${featuredNews1.image}`) : "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=600&h=100"} className="w-full h-full object-cover" alt="" />
               </div>
             </motion.div>
           )}
@@ -87,7 +87,7 @@ const NewsEvents = () => {
             >
               <div className="h-40 overflow-hidden">
                 <img 
-                  src={featuredNews2.image || "https://images.unsplash.com/photo-1606059728286-4e5554f67d2f?auto=format&fit=crop&q=80&w=600&h=400"} 
+                  src={featuredNews2.image ? (featuredNews2.image.startsWith('http') ? featuredNews2.image : `${API_BASE_URL}${featuredNews2.image}`) : "https://images.unsplash.com/photo-1606059728286-4e5554f67d2f?auto=format&fit=crop&q=80&w=600&h=400"} 
                   alt={featuredNews2.title} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />

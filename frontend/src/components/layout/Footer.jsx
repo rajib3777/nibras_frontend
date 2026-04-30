@@ -1,9 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin } from 'lucide-react';
-import nibrasLogo from '../../assets/nibras_logo.png'; // Make sure this exists
+import nibrasLogo from '../../assets/nibras_logo.png';
+import { useSettings } from '../../hooks/useSettings';
 
 const Footer = () => {
+  const { data: settings } = useSettings();
+  
+  const siteName = settings?.site_name || 'Nibras Foundation';
+  const tagline = settings?.about_short || 'Dedicated to lighting hearts with knowledge. We provide quality education, memorization of the Quran, and social welfare programs to build a better future for our community.';
+  const address = settings?.address || '123 Islamic Center Road, Dhaka, Bangladesh';
+  const phone = settings?.phone || '+880 1234 567 890';
+  const email = settings?.email || 'info@nibrasfoundation.org';
   return (
     <footer className="bg-[#0A3A23] text-white pt-20 pb-8 relative overflow-hidden">
       {/* Decorative Top Border */}
@@ -21,10 +29,10 @@ const Footer = () => {
           >
             <div className="flex items-center gap-3 bg-white p-3 rounded-lg inline-flex w-max">
               <img src={nibrasLogo} alt="Nibras Logo" className="w-8 h-8" />
-              <span className="font-serif text-[#115E39] font-bold text-lg">Nibras Foundation</span>
+              <span className="font-serif text-[#115E39] font-bold text-lg">{siteName}</span>
             </div>
             <p className="text-white/80 leading-relaxed text-sm">
-              Dedicated to lighting hearts with knowledge. We provide quality education, memorization of the Quran, and social welfare programs to build a better future for our community.
+              {tagline}
             </p>
           </motion.div>
 
@@ -58,15 +66,15 @@ const Footer = () => {
             <ul className="space-y-4 text-white/80 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-[#C89B3C] flex-shrink-0 mt-0.5" />
-                <span>123 Islamic Center Road<br/>Dhaka, Bangladesh</span>
+                <span>{address}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-[#C89B3C] flex-shrink-0" />
-                <span>+880 1234 567 890</span>
+                <span>{phone}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-[#C89B3C] flex-shrink-0" />
-                <span>info@nibrasfoundation.org</span>
+                <span>{email}</span>
               </li>
             </ul>
           </motion.div>
@@ -100,7 +108,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-white/60 text-sm">
-            © 2026 Nibras Foundation. All rights reserved.
+            © {new Date().getFullYear()} {siteName}. All rights reserved.
           </p>
           <div className="flex gap-4 text-sm text-white/60">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
