@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-
 import { useQuery } from '@tanstack/react-query';
+
 import apiClient, { API_BASE_URL } from '../api/client';
+import impactImg from '../assets/generated/teachers_teaching_1778701316535.png';
 
 const Teachers = () => {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
@@ -86,7 +87,7 @@ const Teachers = () => {
            </div>
            <div className="w-full md:w-1/2 h-64 md:h-auto relative">
               <img 
-                 src="https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=800" 
+                 src={impactImg} 
                  alt="Impact" 
                  className="absolute inset-0 w-full h-full object-cover"
               />

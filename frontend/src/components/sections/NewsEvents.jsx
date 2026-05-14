@@ -1,195 +1,115 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import apiClient, { API_BASE_URL } from '../../api/client';
+import { Calendar, MapPin, Clock, ArrowUpRight, Sparkles } from 'lucide-react';
+import n1 from '../../assets/home/1.1.JPG';
+import n2 from '../../assets/home/1.2.jpeg';
+import n3 from '../../assets/home/1.3.jpg';
+
+const fallbackNews = [
+  { id: 'n1', title: 'Annual Quran Competition 2024', titleBn: 'বার্ষিক কুরআন প্রতিযোগিতা ২০২৪', titleAr: 'مسابقة القرآن السنوية 2024', summary: 'Students from all branches participated in the annual Hifz competition — a celebration of dedication and excellence.', summaryBn: 'বার্ষিক হিফজ প্রতিযোগিতায় সকল শাখার শিক্ষার্থীরা অংশগ্রহণ করেছিল।', created_at: new Date().toISOString(), image: n1, tag: 'Event', tagBn: 'ইভেন্ট' },
+  { id: 'n2', title: 'New Campus Inauguration Ceremony', titleBn: 'নতুন ক্যাম্পাস উদ্বোধন অনুষ্ঠান', titleAr: 'حفل افتتاح الحرم الجامعي الجديد', summary: 'We are thrilled to announce the grand opening of our state-of-the-art Mohammadpur campus.', summaryBn: 'আমরা আমাদের অত্যাধুনিক মোহাম্মদপুর ক্যাম্পাসের উদ্বোধন ঘোষণা করতে পেরে আনন্দিত।', created_at: new Date(Date.now() - 86400000 * 3).toISOString(), image: n2, tag: 'News', tagBn: 'সংবাদ' },
+  { id: 'n3', title: 'Scholarship Awards Ceremony', titleBn: 'বৃত্তি পুরস্কার অনুষ্ঠান', titleAr: 'حفل توزيع المنح الدراسية', summary: 'Over 50 deserving students received full scholarships funded by generous donors from our community.', summaryBn: '৫০ জনেরও বেশি মেধাবী শিক্ষার্থী সম্প্রদায়ের উদার দাতাদের দ্বারা অর্থায়িত পূর্ণ বৃত্তি পেয়েছে।', created_at: new Date(Date.now() - 86400000 * 7).toISOString(), image: n3, tag: 'Achievement', tagBn: 'অর্জন' },
+];
+
+const fallbackEvents = [
+  { id: 'e1', title: 'Parent-Teacher Meeting', titleBn: 'অভিভাবক-শিক্ষক সভা', titleAr: 'اجتماع أولياء الأمور والمعلمين', start_time: new Date(Date.now() + 86400000 * 5).toISOString(), location: 'Main Auditorium', locationBn: 'প্রধান হলরুম' },
+  { id: 'e2', title: 'Islamic Book Fair 2024', titleBn: 'ইসলামিক বইমেলা ২০২৪', titleAr: 'معرض الكتاب الإسلامي 2024', start_time: new Date(Date.now() + 86400000 * 15).toISOString(), location: 'Campus Ground', locationBn: 'ক্যাম্পাস মাঠ' },
+  { id: 'e3', title: 'Ramadan Quran Khatm Program', titleBn: 'রমজান কুরআন খতম প্রোগ্রাম', titleAr: 'برنامج ختم القرآن في رمضان', start_time: new Date(Date.now() + 86400000 * 25).toISOString(), location: 'Main Mosque', locationBn: 'প্রধান মসজিদ' },
+];
 
 const NewsEvents = () => {
-  const { data: newsData, isLoading: isNewsLoading } = useQuery({
-    queryKey: ['news'],
-    queryFn: async () => {
-      const response = await apiClient.get('/news/articles/');
-      return response.data;
-    }
-  });
+  const { t, i18n } = useTranslation();
+  const { data: newsData } = useQuery({ queryKey: ['news'], queryFn: async () => { const r = await apiClient.get('/news/articles/'); return r.data; }, retry: false });
+  const { data: eventsData } = useQuery({ queryKey: ['events'], queryFn: async () => { const r = await apiClient.get('/news/events/'); return r.data; }, retry: false });
 
-  const { data: eventsData, isLoading: isEventsLoading } = useQuery({
-    queryKey: ['events'],
-    queryFn: async () => {
-      const response = await apiClient.get('/news/events/');
-      return response.data;
-    }
-  });
+  let news = newsData?.results || newsData || [];
+  if (news.length === 0) news = fallbackNews;
+  let events = eventsData?.results || eventsData || [];
+  if (events.length === 0) events = fallbackEvents;
 
-  const fallbackNews = [
-    {
-      id: 'n1',
-      title: 'Annual Quran Competition 2024',
-      summary: 'Students from all branches participated in the annual Hifz competition.',
-      created_at: new Date().toISOString(),
-      image: 'https://images.unsplash.com/photo-1585036156171-384164a8c675?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'n2',
-      title: 'New Campus Inauguration',
-      summary: 'We are thrilled to announce the opening of our new campus.',
-      created_at: new Date().toISOString(),
-      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=400'
-    }
-  ];
-
-  const fallbackEvents = [
-    {
-      id: 'e1',
-      title: 'Parent-Teacher Meeting',
-      date: new Date(Date.now() + 86400000 * 5).toISOString(),
-      time: '10:00 AM',
-      location: 'Main Auditorium'
-    },
-    {
-      id: 'e2',
-      title: 'Islamic Book Fair',
-      date: new Date(Date.now() + 86400000 * 15).toISOString(),
-      time: '09:00 AM',
-      location: 'Campus Ground'
-    }
-  ];
-
-  let newsList = newsData?.results || newsData || [];
-  if (newsList.length === 0) newsList = fallbackNews;
-
-  let eventsList = eventsData?.results || eventsData || [];
-  if (eventsList.length === 0) eventsList = fallbackEvents;
-  const featuredNews1 = newsList.length > 0 ? newsList[0] : null;
-  const featuredNews2 = newsList.length > 1 ? newsList[1] : null;
-  const featuredEvent = eventsList.length > 0 ? eventsList[0] : null;
+  const isRTL = i18n.language === 'ar';
+  const getTitle = (item) => isRTL ? (item.titleAr || item.title) : i18n.language === 'bn' ? (item.titleBn || item.title) : item.title;
+  const getSummary = (item) => i18n.language === 'bn' ? (item.summaryBn || item.summary || '') : item.summary || '';
+  const getLocation = (ev) => i18n.language === 'bn' ? (ev.locationBn || ev.location) : ev.location;
 
   return (
-    <section className="py-16 md:py-24 bg-[#FDFBF7]">
-      <div className="container-custom">
-        
-        {/* Section Title */}
-        <div className="flex items-center justify-start mb-10">
-          <h2 className="font-sans text-2xl md:text-3xl font-bold text-gray-900 mr-6">
-            Latest News & Events
-          </h2>
-          <div className="h-[1px] bg-gray-200 flex-grow max-w-[800px]"></div>
+    <section className="section-padding bg-[#FAFAF8] relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#115E39]/20 to-transparent" />
+      <div className="container-custom relative z-10">
+
+        {/* Header */}
+        <div className="text-center mb-14" dir={isRTL ? 'rtl' : 'ltr'}>
+          <motion.span initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="section-label mb-4 inline-flex">
+            <Sparkles size={12} /> {i18n.language === 'bn' ? 'ইভেন্ট' : i18n.language === 'ar' ? 'الأحداث' : 'Events'}
+          </motion.span>
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+            className="font-serif text-4xl md:text-5xl font-black text-[#0A3A23] mt-3">
+            {i18n.language === 'bn' ? 'আসন্ন ইভেন্টসমূহ' : i18n.language === 'ar' ? 'الأحداث القادمة' : 'Upcoming Events'}
+          </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          {/* Card 1: Main News */}
-          {featuredNews1 && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-md overflow-hidden border border-gray-100 flex flex-col group relative"
-            >
-              <div className="h-8 w-full bg-[#E5C167] overflow-hidden">
-                  <img src={featuredNews1.image ? (featuredNews1.image.startsWith('http') ? featuredNews1.image : `${API_BASE_URL}${featuredNews1.image}`) : "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=600&h=100"} className="w-full h-full object-cover opacity-50" alt="" />
-              </div>
-              
-              <div className="p-6 flex-grow flex flex-col justify-between z-10 bg-white">
-                <div>
-                  <h3 className="font-sans text-[18px] font-bold text-gray-900 mb-2 leading-snug">
-                    {featuredNews1.title}
-                  </h3>
-                  <p className="text-gray-500 text-[13px] mb-6 line-clamp-2">
-                    {featuredNews1.content || "Read our latest update online."}
-                  </p>
-                </div>
-                <div className="flex justify-between items-end border-t border-gray-100 pt-4 mt-auto">
-                  <span className="text-gray-500 text-[12px] font-medium">{new Date(featuredNews1.created_at || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                  <button className="text-gray-900 text-[13px] font-bold hover:text-[#115E39]">
-                    Read More
-                  </button>
-                </div>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* News Cards (Hidden as requested) */}
+          {/* <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6"> ... </div> */}
 
-              <div className="h-10 w-full overflow-hidden mt-auto">
-                  <img src={featuredNews1.image ? (featuredNews1.image.startsWith('http') ? featuredNews1.image : `${API_BASE_URL}${featuredNews1.image}`) : "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=600&h=100"} className="w-full h-full object-cover" alt="" />
+          {/* Events Sidebar (Centered since news is hidden) */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="space-y-4 lg:col-start-2 max-w-md mx-auto w-full"
+            dir={isRTL ? 'rtl' : 'ltr'}
+          >
+            <div className="gradient-green rounded-2xl p-5 text-white">
+              <div className="flex items-center gap-2 mb-4">
+                <Calendar size={16} className="text-[#C89B3C]" />
+                <span className="text-xs font-black uppercase tracking-widest text-[#C89B3C]">{t('upcoming_event')}</span>
               </div>
-            </motion.div>
-          )}
+              {events.slice(0, 3).map((ev, i) => (
+                <motion.div
+                  key={ev.id}
+                  initial={{ opacity: 0, x: 10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 + i * 0.1 }}
+                  className={`${i < events.slice(0,3).length - 1 ? 'border-b border-white/10 pb-4 mb-4' : ''}`}
+                >
+                  <h4 className="font-bold text-sm text-white mb-2 leading-snug">{getTitle(ev)}</h4>
+                  <div className="flex items-center gap-1.5 text-white/60 text-xs mb-1">
+                    <Calendar size={11} />
+                    <span>{new Date(ev.start_time || ev.date || Date.now()).toLocaleDateString(i18n.language === 'ar' ? 'ar-SA' : i18n.language === 'bn' ? 'bn-BD' : 'en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-white/60 text-xs">
+                    <MapPin size={11} />
+                    <span>{getLocation(ev)}</span>
+                  </div>
+                </motion.div>
+              ))}
+              <button className="w-full mt-2 py-2.5 rounded-xl border border-white/20 text-white text-xs font-bold hover:bg-white/10 transition-colors">
+                {t('view_details')} <ArrowUpRight size={12} className="inline ml-1" />
+              </button>
+            </div>
 
-          {/* Card 2: Secondary News */}
-          {featuredNews2 && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-white rounded-md overflow-hidden border border-gray-100 flex flex-col group"
-            >
-              <div className="h-40 overflow-hidden">
-                <img 
-                  src={featuredNews2.image ? (featuredNews2.image.startsWith('http') ? featuredNews2.image : `${API_BASE_URL}${featuredNews2.image}`) : "https://images.unsplash.com/photo-1606059728286-4e5554f67d2f?auto=format&fit=crop&q=80&w=600&h=400"} 
-                  alt={featuredNews2.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+            {/* Quick notice card */}
+            <div className="card-premium p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full bg-[#C89B3C] animate-pulse" />
+                <span className="text-xs font-black uppercase tracking-widest text-[#0A3A23]">
+                  {i18n.language === 'bn' ? 'জরুরি নোটিশ' : i18n.language === 'ar' ? 'إشعار عاجل' : 'Latest Notice'}
+                </span>
               </div>
-              <div className="p-6 flex-grow flex flex-col justify-between">
-                <div>
-                  <h3 className="font-sans text-[16px] font-bold text-gray-900 mb-2">
-                    {featuredNews2.title}
-                  </h3>
-                </div>
-                <div className="flex justify-end items-end mt-4">
-                  <button className="bg-[#B8860B] text-white text-[12px] font-semibold px-4 py-1.5 rounded hover:bg-[#9B700A] transition-colors">
-                    Read More
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Card 3: Upcoming Event */}
-          {featuredEvent && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="rounded-md overflow-hidden border border-gray-200 flex flex-col"
-            >
-              <div className="bg-[#3D694F] text-white text-center py-3">
-                <h3 className="font-sans text-[15px] font-semibold tracking-wide">
-                  Upcoming Event
-                </h3>
-              </div>
-              
-              <div className="bg-[#F4EFE6] p-6 flex-grow relative overflow-hidden">
-                 <div className="absolute inset-0 opacity-10">
-                    <div className="w-full h-full grid grid-cols-6 grid-rows-6 gap-1">
-                       {[...Array(36)].map((_, i) => (
-                          <div key={i} className="border border-[#3D694F]"></div>
-                       ))}
-                    </div>
-                 </div>
-
-                 <div className="relative z-10">
-                    <h4 className="font-sans text-[16px] font-bold text-gray-900 mb-4 border-b border-gray-300 pb-2">
-                      {featuredEvent.title}
-                    </h4>
-                    <ul className="space-y-3 text-[13px] text-gray-800 font-medium">
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#3D694F]"></span> {new Date(featuredEvent.start_time).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#3D694F]"></span> {featuredEvent.location}
-                      </li>
-                    </ul>
-                 </div>
-              </div>
-              
-              <div className="bg-[#1A4B3A] p-4 flex justify-end">
-                <button className="border border-white/40 text-white text-[12px] font-medium px-4 py-1.5 rounded hover:bg-white hover:text-[#1A4B3A] transition-colors">
-                  View Details
-                </button>
-              </div>
-            </motion.div>
-          )}
-
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {t('emergency_notice')}
+              </p>
+              <button className="mt-3 text-[#115E39] text-xs font-black flex items-center gap-1 hover:gap-2 transition-all">
+                {t('read_more')} <ArrowUpRight size={12} />
+              </button>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,120 +1,113 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Target, Eye, History as HistoryIcon, Users, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { History as HistoryIcon, MapPin, GraduationCap, Trophy } from 'lucide-react';
+import campusImg from '../assets/generated/madrasah_campus_1778701296088.png';
 
 const History = () => {
-  const directors = [
-    { name: 'Dr. Abdullah Al Mamun', role: 'Chairman', bio: 'Expert in Islamic Education and Philanthropy.' },
-    { name: 'Prof. Sarah Ahmed', role: 'Managing Director', bio: 'Specialist in child development and educational management.' },
-    { name: 'Ustadh Omar Faruq', role: 'Director of Academics', bio: 'Renowned scholar with over 20 years of experience.' },
-  ];
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
 
-  const sections = [
+  const timelineEvents = [
     {
-      title: 'Our History',
-      icon: <HistoryIcon className="text-accent" size={32} />,
-      content: 'Nibras Foundation was established with a vision to provide quality education and social welfare services to the community. Over the years, we have grown from a small learning center to a comprehensive foundation serving thousands of students.',
-      bg: 'bg-white'
+      year: '2006',
+      title: i18n.language === 'bn' ? 'যাত্রা শুরু' : i18n.language === 'ar' ? 'بداية الرحلة' : 'The Beginning',
+      desc: t('history_desc_1'),
+      icon: HistoryIcon,
+      color: 'from-[#115E39] to-[#0A3A23]',
     },
     {
-      title: 'Our Mission',
-      icon: <Target className="text-accent" size={32} />,
-      content: 'To empower individuals through holistic education, spiritual growth, and community engagement, fostering a generation that is both academically excellent and morally upright.',
-      bg: 'bg-gray-50'
+      year: '2006',
+      title: i18n.language === 'bn' ? 'নেতৃত্ব প্রতিষ্ঠা' : i18n.language === 'ar' ? 'تأسيس القيادة' : 'Leadership Established',
+      desc: t('history_desc_2'),
+      icon: MapPin,
+      color: 'from-[#C89B3C] to-[#E5C167]',
     },
     {
-      title: 'Our Vision',
-      icon: <Eye className="text-accent" size={32} />,
-      content: 'To be a leading global institution for Islamic and modern education, recognized for its commitment to excellence, integrity, and service to humanity.',
-      bg: 'bg-white'
+      year: '2015',
+      title: i18n.language === 'bn' ? 'একাডেমিক শ্রেষ্ঠত্ব' : i18n.language === 'ar' ? 'التميز الأكاديمي' : 'Academic Excellence',
+      desc: i18n.language === 'bn' ? 'অসংখ্য শিক্ষার্থী সাফল্যের সাথে হাফেজ-এ-কুরআন সম্পন্ন করে।' : i18n.language === 'ar' ? 'أكمل العديد من الطلاب بنجاح حفظ القرآن الكريم.' : 'Numerous students successfully completed Hifz-e-Quran alongside their academic studies.',
+      icon: GraduationCap,
+      color: 'from-[#1A8B54] to-[#115E39]',
+    },
+    {
+      year: '2020+',
+      title: i18n.language === 'bn' ? 'আধুনিকায়ন ও প্রসার' : i18n.language === 'ar' ? 'التحديث والتوسع' : 'Modernization & Expansion',
+      desc: i18n.language === 'bn' ? 'নতুন ক্যাম্পাস, ডিজিটাল ক্লাসরুম এবং বিশ্বমানের সুযোগ-সুবিধার সংযোজন।' : i18n.language === 'ar' ? 'إضافة حرم جامعي جديد وفصول دراسية رقمية ومرافق عالمية المستوى.' : 'Addition of new campuses, digital classrooms, and world-class facilities.',
+      icon: Trophy,
+      color: 'from-[#A38634] to-[#C89B3C]',
     }
   ];
 
   return (
-    <div className="pt-[260px] md:pt-[300px] lg:pt-[340px] pb-20 font-sans overflow-hidden">
+    <div className="bg-[#FAFAF8] min-h-screen">
       {/* Hero Header */}
-      <div className="bg-[#0f3d2e] py-20 px-6 relative">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent/20 via-transparent to-transparent"></div>
+      <div className="relative w-full h-[40vh] min-h-[350px] flex justify-center items-center overflow-hidden">
+        <div className="absolute inset-0 bg-[#0A3A23]">
+          <div className="absolute inset-0 bg-black/40 mix-blend-multiply z-10" />
+          <img src={campusImg} alt="History" className="w-full h-full object-cover object-center opacity-40" />
+        </div>
+        <div className="absolute bottom-0 left-0 w-full z-20 pointer-events-none">
+          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-16 md:h-24">
+            <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#FAFAF8" />
+          </svg>
         </div>
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-4xl mx-auto text-center relative z-10"
+          transition={{ duration: 0.8 }}
+          className="relative z-30 text-center px-4"
         >
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter">
-            Our <span className="text-accent italic">Heritage</span> & Purpose
+          <span className="inline-block py-1 px-4 rounded-full bg-[#C89B3C]/20 border border-[#C89B3C]/50 text-[#C89B3C] text-sm font-bold tracking-widest uppercase mb-4 backdrop-blur-md">
+            {t('history_title')}
+          </span>
+          <h1 className="text-5xl md:text-6xl font-serif font-black text-white drop-shadow-lg">
+            {t('history')}
           </h1>
-          <p className="text-gray-300 text-lg md:text-xl font-medium max-w-2xl mx-auto">
-            Discover the journey of Nibras Foundation and our unwavering commitment to excellence.
-          </p>
         </motion.div>
       </div>
 
-      {/* Mission, Vision, History */}
-      <div className="max-w-[1440px] mx-auto px-6 mt-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {sections.map((section, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className={`${section.bg} p-10 rounded-[40px] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 group`}
-            >
-              <div className="mb-6 p-4 bg-gray-50 rounded-2xl w-fit group-hover:scale-110 transition-transform">
-                {section.icon}
-              </div>
-              <h3 className="text-2xl font-black text-[#0f3d2e] mb-4 uppercase tracking-tight">{section.title}</h3>
-              <p className="text-gray-600 leading-relaxed font-medium">
-                {section.content}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+      {/* Timeline Section */}
+      <div className="container-custom py-24 relative z-10">
+        <div className="max-w-4xl mx-auto relative" dir={isRTL ? 'rtl' : 'ltr'}>
+          
+          {/* Vertical Line */}
+          <div className={`absolute top-0 bottom-0 w-1 bg-gradient-to-b from-[#115E39]/20 via-[#C89B3C]/40 to-[#115E39]/10 hidden md:block ${isRTL ? 'right-1/2 translate-x-1/2' : 'left-1/2 -translate-x-1/2'}`} />
 
-      {/* Board of Directors */}
-      <div className="mt-32 bg-gray-50 py-32 px-6">
-        <div className="max-w-[1440px] mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div className="max-w-2xl">
-              <span className="text-accent font-black uppercase tracking-[0.3em] text-sm mb-4 block">Leadership</span>
-              <h2 className="text-4xl md:text-5xl font-black text-[#0f3d2e] uppercase tracking-tighter leading-none">
-                Board of <span className="text-accent">Directors</span>
-              </h2>
-            </div>
-            <p className="text-gray-500 font-bold max-w-sm">
-              Guided by a team of dedicated scholars and professionals committed to our mission.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {directors.map((director, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100 flex flex-col items-center text-center group hover:shadow-2xl transition-all duration-500"
+          <div className="space-y-16">
+            {timelineEvents.map((item, index) => (
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.7 }}
+                className={`relative flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? (isRTL ? 'md:flex-row-reverse' : 'md:flex-row') : (isRTL ? 'md:flex-row' : 'md:flex-row-reverse')}`}
               >
-                <div className="w-32 h-32 bg-gray-100 rounded-full mb-6 overflow-hidden border-4 border-white shadow-lg relative">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-[#0f3d2e]/20 to-transparent"></div>
-                  <Users className="w-full h-full p-8 text-[#0f3d2e]/20" />
+                
+                {/* Content Box */}
+                <div className="flex-1 w-full text-center md:text-start relative">
+                  <div className={`bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_20px_40px_rgba(17,94,57,0.08)] hover:-translate-y-2 transition-all duration-500 relative z-10 ${index % 2 === 0 ? (isRTL ? 'md:text-right' : 'md:text-right') : (isRTL ? 'md:text-left' : 'md:text-left')}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                    <span className="text-[#C89B3C] font-black text-4xl font-serif block mb-3">{item.year}</span>
+                    <h3 className="text-2xl font-bold text-[#0A3A23] mb-3">{item.title}</h3>
+                    <p className="text-gray-600 leading-relaxed text-lg">{item.desc}</p>
+                  </div>
                 </div>
-                <h4 className="text-xl font-black text-[#0f3d2e] mb-1 uppercase tracking-tight">{director.name}</h4>
-                <span className="text-accent font-bold text-sm uppercase tracking-widest mb-4">{director.role}</span>
-                <p className="text-gray-500 text-sm leading-relaxed mb-6">
-                  {director.bio}
-                </p>
-                <button className="flex items-center gap-2 text-[#0f3d2e] font-black text-xs uppercase tracking-widest group-hover:text-accent transition-colors">
-                  View Full Profile <ChevronRight size={14} />
-                </button>
+
+                {/* Center Icon */}
+                <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white shadow-xl items-center justify-center border-4 border-[#FAFAF8] z-20">
+                  <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center`}>
+                    <item.icon size={20} className="text-white" />
+                  </div>
+                </div>
+
+                {/* Empty Space for alignment */}
+                <div className="flex-1 hidden md:block" />
+
               </motion.div>
             ))}
           </div>
+
         </div>
       </div>
     </div>

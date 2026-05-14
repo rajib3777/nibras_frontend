@@ -11,6 +11,10 @@ import Programs from './pages/Programs';
 import Teachers from './pages/Teachers';
 import NoticeBoard from './pages/NoticeBoard';
 import Contact from './pages/Contact';
+import Members from './pages/Members';
+import Committees from './pages/Committees';
+import Messages from './pages/Messages';
+import Publications from './pages/Publications';
 
 // Scroll to top component
 const ScrollToTop = () => {
@@ -34,6 +38,10 @@ const App = () => {
             <Route path="/teachers" element={<><ScrollToTop /><Teachers /></>} />
             <Route path="/news" element={<><ScrollToTop /><NoticeBoard /></>} />
             <Route path="/contact" element={<><ScrollToTop /><Contact /></>} />
+            <Route path="/members" element={<><ScrollToTop /><Members /></>} />
+            <Route path="/committees" element={<><ScrollToTop /><Committees /></>} />
+            <Route path="/messages" element={<><ScrollToTop /><Messages /></>} />
+            <Route path="/publications" element={<><ScrollToTop /><Publications /></>} />
           </Routes>
         </main>
         <FloatingCallButton />

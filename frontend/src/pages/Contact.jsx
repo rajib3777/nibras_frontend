@@ -4,6 +4,7 @@ import { Phone, Mail, MapPin, Send, Plus, Minus, Facebook, Twitter, Instagram, L
 import { useSettings } from '../hooks/useSettings';
 import { useSocialMedia } from '../hooks/useSocialMedia';
 import apiClient from '../api/client';
+import campusImg from '../assets/generated/madrasah_campus_1778701296088.png';
 
 const Contact = () => {
   const [activeFaq, setActiveFaq] = useState(0);
@@ -83,7 +84,19 @@ const Contact = () => {
   ];
 
   return (
-    <div className="pt-[260px] md:pt-[300px] lg:pt-[340px] pb-20 font-sans min-h-screen">
+    <div className="font-sans min-h-screen bg-[#FDFBF7]">
+      {/* Header Banner */}
+      <div className="relative w-full h-[400px] flex justify-center items-center overflow-hidden mb-24">
+        <img src={campusImg} alt="Campus" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A3A23]/90 to-[#115E39]/80" />
+        <div className="relative z-10 text-center px-4">
+           <h1 className="font-sans text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-wide mb-4">
+             Contact Us
+           </h1>
+           <p className="text-white/80 max-w-lg mx-auto">Get in touch with Nibras Foundation. We are always ready to listen to your queries and suggestions.</p>
+        </div>
+      </div>
+
       <div className="max-w-[1440px] mx-auto px-6 mb-32">
          <div className="flex flex-col md:flex-row gap-16">
             {/* Contact Info */}
